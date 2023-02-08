@@ -1,0 +1,368 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace OOP_Lab1
+{
+    class TComplex 
+    {
+        protected double realPt, imagPt;
+
+        public TComplex() {
+            realPt = 1;
+            imagPt = 1;
+            ShowNumber();
+        }
+        public TComplex(double a, double b) {
+            this.realPt = a;
+            this.imagPt = b;
+            ShowNumber();
+        }
+        public TComplex(TComplex sample) {
+            this.realPt = sample.realPt;
+            this.imagPt = sample.imagPt;
+        }
+        ~TComplex() {
+            Console.WriteLine("Successfully deleted"); 
+        }
+
+        public void InputRealPt() {
+            string temp;
+            Console.WriteLine("Enter real part of complex number: ");
+            temp = Console.ReadLine();
+            this.realPt = Convert.ToDouble(temp);
+        }
+        public void InputImagPt()
+        {
+            string temp;
+            Console.WriteLine("Enter imaginary part of complex number: ");
+            temp = Console.ReadLine();
+            this.imagPt = Convert.ToDouble(temp);
+        }
+        public void ShowNumber() {
+            Console.WriteLine("\t" + this.realPt + " + " + this.imagPt + "i");
+        }
+        public static TComplex operator + (TComplex a, TComplex b) {
+            TComplex result = new TComplex();
+            result.realPt = a.realPt + b.realPt;
+            result.imagPt = a.imagPt + b.imagPt;
+            return result;
+        }
+        public static TComplex operator - (TComplex a, TComplex b) {
+            TComplex result = new TComplex();
+            result.realPt = a.realPt - b.realPt;
+            result.imagPt = a.imagPt - b.imagPt;
+            return result;
+        }
+        public static TComplex operator *(TComplex a, TComplex b) {
+            TComplex result = new TComplex();
+            result.realPt = a.realPt*b.realPt - a.imagPt * b.imagPt;
+            result.imagPt = a.realPt*b.imagPt + b.realPt*a.imagPt;
+            return result;
+        }
+        public static TComplex operator / (TComplex a, TComplex b)
+        {
+            TComplex result = new TComplex();
+            result.realPt = (a.realPt * b.realPt + a.imagPt * b.imagPt) / (b.realPt * b.realPt + b.imagPt * b.imagPt);
+            result.imagPt = (a.realPt * b.imagPt - b.realPt * a.imagPt) / (b.realPt * b.realPt + b.imagPt * b.imagPt);
+            return result;
+        }
+    }
+    class TMComplex : TComplex 
+    {
+        public TMComplex() : base() {}
+        public TMComplex(double a, double b) : base(a, b) { }
+        public TMComplex(TMComplex sample)
+        {
+            this.realPt = sample.realPt;
+            this.imagPt = sample.imagPt;
+        }
+        public TMComplex(TComplex sample) : base(sample)
+        {        }
+        public void TellQuarter() {
+            short quarter = 0;
+            if (this.realPt>0 && this.imagPt>0) { 
+                quarter = 1;
+                goto Found; 
+            }
+            if (this.realPt < 0 && this.imagPt > 0) {
+                quarter = 2;
+                goto Found;
+            }
+            if (this.realPt < 0 && this.imagPt < 0) { 
+                quarter = 3;
+                goto Found; 
+            }
+            if (this.realPt > 0 && this.imagPt < 0) { 
+                quarter = 4; 
+            }
+            Found:
+            switch (quarter) {
+                case 1:
+                    Console.WriteLine();
+                    Console.WriteLine("Complex number is in first quadrant");
+                    break;
+                    
+                case 2:
+                    Console.WriteLine();
+                    Console.WriteLine("Complex number is in second quadrant");
+                    break;
+
+                case 3:
+                    Console.WriteLine();
+                    Console.WriteLine("Complex number is in third quadrant");
+                    break;
+
+                case 4:
+                    Console.WriteLine();
+                    Console.WriteLine("Complex number is in fourth quadrant");
+                    break;
+                  
+                default:
+                    Console.WriteLine();
+                    Console.WriteLine("Complex number is not in any quadrant. It lays on the axis");
+                    break;
+            }
+        }
+       public double DistToBegin() {
+            return Math.Sqrt(Math.Pow(this.realPt,2)+Math.Pow(this.imagPt,2));
+        }
+    }
+    class Program
+    {
+        static void ToShowQuarter(TComplex parent) {
+            TMComplex a = new TMComplex(parent);
+            a.TellQuarter();
+        }
+        static void ToShowDist(TComplex parent)
+        {
+            TMComplex a = new TMComplex(parent);
+            Console.WriteLine("Complex number is in " + a.DistToBegin() + " points to the beginning of coordinates");
+
+        }
+        static void ShObjcts(TComplex[] var, Int32 written) {
+            Console.WriteLine("Here are all complex numbers you have:\n");
+            for (int i = 0; i < written; i++) {
+                Console.Write(i + ". ");
+                var[i].ShowNumber();
+            }
+            Console.WriteLine();
+        }
+        static Int32 EnterChoice() {
+            string temp;
+            temp = Console.ReadLine();
+            return Convert.ToInt32(temp);
+        }
+        static double EnterRealPt() {
+            string temp;
+            Console.WriteLine("Enter real part of complex number: ");
+            temp = Console.ReadLine();
+            return Convert.ToDouble(temp);
+        }
+        static double EnterImagPt() {
+            string temp;
+            Console.WriteLine("Enter imaginary part of complex number: ");
+            temp = Console.ReadLine();
+            return Convert.ToDouble(temp);
+        }
+
+
+
+        static void Main()
+        {
+            double a, b;
+            Int32 choice1, choice2, index=0, written=0;
+
+            Console.WriteLine("Here how looks complex number created by default constructor:");
+            TComplex[] var = new TComplex[10];
+            var[0] =  new TComplex();
+            Console.WriteLine();
+
+            do {
+            Console.WriteLine("Enter number to do mensioned task:\n" +
+                "1. To create new complex number;\n" +
+                "2. To change complex number or to see it\n" +
+                "3. To see the whole list of created complex numbers \n" +
+                "4. To do some mathematics with complex nums (+, -, *, /) \n" +
+                "5. To see in which qudrant is complex number \n" +
+                "6. To see the distance to the beginning of coords from complex number \n" +
+                "7. To finish the program\n");
+              
+                choice1 = EnterChoice();
+                Console.Clear();
+                switch (choice1) {
+                    case 1:
+                    defAction:
+                        do
+                        {
+                            if (index > 9) { index = 0; }
+                            Console.WriteLine("Enter number to do mensioned task:\n" +
+                        "1. To create complex number by template;\n" +
+                        "2. To create complex number on your own\n" +
+                        "3. To copy complex number (you must already have at least 1 complex number ) \n" +
+                        "4. To exit this menu \n");
+
+                            choice2 = EnterChoice();
+                            switch (choice2)
+                            {
+                                case 1: var[index] = new TMComplex();
+                                    index++;
+
+                                    if( written < 10)
+                                    {
+                                        written++; }
+                                        
+                                       
+                                    break;
+                                case 2: {
+                                        a = EnterRealPt();
+                                        b = EnterImagPt();
+                                        var[index] = new TMComplex(a, b);
+                                        index++;
+                                        if (written < 10)
+                                        {
+                                            written++;
+                                        }
+                                        break;
+                                    }
+                                case 3: ShObjcts(var, written);
+                                    Console.WriteLine("Which number you want to copy? Enter matching number");
+                                    choice2 = EnterChoice();
+                                    var[index] = new TMComplex(var[choice2]);
+                                    index++;
+                                    if (written < 10)
+                                    {
+                                        written++;
+                                    }
+                                    break;
+                                default:
+                                    choice2 = 4;
+                                    break;
+                            }
+                            Console.Clear();
+                        } while (choice2 != 4);
+                        break;
+
+                    case 2:
+                        do {
+                            ShObjcts(var, written);
+                            Console.WriteLine("Choose one of the complex numbers");
+                            choice2 = EnterChoice();
+                            Console.WriteLine("Enter 1 to see chosen number\n" +
+                            "Enter 2 to change complex number\n" +
+                            "Enter any other number to exit this menu\n");
+                            choice1 = EnterChoice();
+                            switch (choice1) {
+                                case 1: var[choice2].ShowNumber();
+                                    break;
+                                case 2:
+                                    Console.WriteLine("Enter 1 to change real part of number\n" +
+                                        "Enter 2 to change imaginary part of number\n" +
+                                        "Enter any other number to exit this menu\n");
+                                    choice1 = EnterChoice();
+                                    switch (choice1) {
+                                        case 1: Console.WriteLine("Enter new real part of complex number");
+                                            var[choice2].InputRealPt();
+                                            var[choice2].ShowNumber();
+                                            break;
+                                        case 2:
+                                            Console.WriteLine("Enter new imaginary part of complex number");
+                                            var[choice2].InputImagPt();
+                                            var[choice2].ShowNumber();
+                                            break;
+                                        default:
+                                            choice1 = 100;
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    choice1 = 100;
+                                    break;
+                            }
+                            Console.Clear();
+                        } while (choice1 != 100);
+                        break;
+
+                    case 3: ShObjcts(var, written);
+                        Console.WriteLine();
+                        break;
+
+                    case 4:
+                        do
+                        {
+                            ShObjcts(var, written);
+                            Console.WriteLine("Choose one of the complex numbers");
+                            choice2 = EnterChoice();
+                            Console.WriteLine("What do tou want to do with this number? \n" +
+                                "1. Add to this number another one \n" +
+                                "2. Subtract from this number another one \n" +
+                                "3. Multiply it by another number \n" +
+                                "4. Divide it by another number \n" +
+                                "Enter any other number to exit this menu");
+                            choice1 = EnterChoice();
+                            switch(choice1){
+                                case 1:
+                                    ShObjcts(var, written);
+                                    Console.WriteLine("Choose one of the complex numbers");
+                                    choice1 = EnterChoice();
+                                    var[choice2] =var[choice2] + var[choice1];
+                                    var[choice2].ShowNumber();
+                                    break;
+
+                                case 2:
+                                    ShObjcts(var, written);
+                                    Console.WriteLine("Choose one of the complex numbers");
+                                    choice1 = EnterChoice();
+                                    var[choice2] = var[choice2] - var[choice1];
+                                    var[choice2].ShowNumber();
+                                    break;
+
+                                case 3:
+                                    ShObjcts(var, written);
+                                    Console.WriteLine("Choose one of the complex numbers");
+                                    choice1 = EnterChoice();
+                                    var[choice2] = var[choice2] * var[choice1];
+                                    var[choice2].ShowNumber();
+                                    break;
+
+                                case 4:
+                                    ShObjcts(var, written);
+                                    Console.WriteLine("Choose one of the complex numbers");
+                                    choice1 = EnterChoice();
+                                    var[choice2] = var[choice2] / var[choice1];
+                                    var[choice2].ShowNumber();
+                                    break;
+
+                                default: 
+                                    choice1 = 5; 
+                                    break;
+                            }
+                            Console.Clear();
+                        } while (choice1!=5);
+                        break;
+
+                    case 5:
+                        ShObjcts(var, written);
+                        Console.WriteLine("Choose one of the complex numbers");
+                        choice2 = EnterChoice();
+                        ToShowQuarter(var[choice2]);
+                        break;
+
+                    case 6:
+                        ShObjcts(var, written);
+                        Console.WriteLine("Choose one of the complex numbers");
+                        choice2 = EnterChoice();
+                        ToShowDist(var[choice2]);
+                        break;
+
+                    case 7:
+                        break;
+
+                    default: goto defAction;
+            }
+            } while (choice1!=7);
+            
+        }
+    }
+}
