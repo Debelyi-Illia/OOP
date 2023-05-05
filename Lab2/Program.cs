@@ -568,6 +568,8 @@ namespace OOP_Lab2csh
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.GetEncoding(1251);
+
             int ch;
             Console.WriteLine("Проініціалізуємо масив для першого завдання:");
             Task1 t1 = new Task1();
